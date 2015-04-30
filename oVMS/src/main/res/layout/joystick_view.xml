@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/background_light"
+    android:weightSum="4"
+    android:baselineAligned="false"
+    >
+
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="1">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="fill_parent"
+            android:id="@+id/imageView2"
+            android:src="@drawable/throttle_bar"
+            android:layout_gravity="center"
+            android:scaleType="fitXY" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView"
+            android:src="@drawable/circle"
+            android:layout_gravity="center_horizontal" />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="2"
+        android:layout_gravity="center_horizontal|bottom"
+        android:baselineAligned="false"
+        android:id="@+id/LinearLayout_central">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_weight="1">
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:id="@+id/listView"
+                android:layout_gravity="top"
+                android:layout_weight="4" />
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:id="@+id/spinner"
+                android:spinnerMode="dropdown"
+                android:layout_gravity="bottom"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1">
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Auto-brake"
+                android:id="@+id/checkBoxAutoBrake"
+                android:checked="true" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Speed limit"
+                android:id="@+id/checkBoxSpeedLimit" />
+
+            <NumberPicker
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/numberPicker"
+                android:layout_gravity="center_horizontal"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="1">
+
+        <ImageButton
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/imageButtonStop"
+            android:layout_gravity="center"
+            android:clickable="true"
+            android:src="@drawable/ic_stop"
+            android:background="#00ffffff"
+            android:scaleType="fitCenter" />
+
+        <ToggleButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New ToggleButton"
+            android:id="@+id/toggleButton"
+            android:layout_gravity="center_horizontal|top" />
+
+        <ImageView
+            android:id="@+id/image_connection"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/connection_unknown"
+            android:layout_gravity="right|top" />
+
+    </FrameLayout>
+
+</LinearLayout>
