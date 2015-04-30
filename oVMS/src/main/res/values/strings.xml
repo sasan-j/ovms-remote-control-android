@@ -362,4 +362,28 @@
 		until you can clearly read the deviations of the other cells from the selection marker.</p>
     ]]></string>
 
+
+    <!-- following stuff are for remote joystick -->
+    <string-array name="scenarios_array">
+        <item>Joystick</item>
+        <item>Spooky</item>
+        <item>(Keanu Reeves)</item>
+    </string-array>
+
+    <!-- RemoteJoystick Debug
+    <string name="map_api_key_debug">0QvjonKAPqu1JRrQz3D7Rfl51x5vK8kS5PiLkTQ</string> -->
+
+    <!-- RemoteJoystick Release
+    <string name="map_api_key_debug">0QvjonKAPqu1CvxcEEcnQbdsxUmPTewEqbkMaSg</string> -->
+
+    <!-- RemoteJoystick Google Play Release -->
+
+    <string name="title_section1">Joystick</string>
+    <string name="title_section2">Settings</string>
+    <string name="title_section3">About</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_example">Example action</string>
+    <string name="action_settings">Settings</string>
+
 </resources>
