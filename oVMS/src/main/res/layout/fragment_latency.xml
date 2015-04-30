@@ -1,0 +1,37 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent" >
+
+	<include layout="@layout/view_car_statusbar" />
+    <EditText
+        android:id="@+id/txt_console"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="top"
+        android:padding="50dp"
+        android:editable="false"/>
+
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="30dp"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal">
+    <Button
+        android:id="@+id/btn_measure_latency_server"
+        android:text="To server"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/btn_measure_latency_car"
+        android:text="To car"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

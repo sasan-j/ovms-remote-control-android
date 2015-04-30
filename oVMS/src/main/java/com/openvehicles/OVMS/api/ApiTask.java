@@ -608,7 +608,7 @@ public class ApiTask extends AsyncTask<Void, Object, Void> {
 				Log.v(TAG, "f MSG Validated");
 				mCarData.server_firmware = dataParts[0].toString();
 
-				publishProgress(MsgType.msgUpdate);
+                publishProgress(MsgType.msgUpdate);
 			}
 			break;
 		}
@@ -656,7 +656,10 @@ public class ApiTask extends AsyncTask<Void, Object, Void> {
 			break;
 		}
 		case 'a': {
-			Log.v(TAG, "Server acknowleged ping");
+			Log.v(TAG, "Server acknowledged ping");
+            //here I mimic the ping reply from the actual car, if we are going to need these
+            //two kind of pings at the same time we might need to change this.
+            publishProgress(MsgType.msgCommand, "105,0");
 			break;
 		}
 		case 'c': {
