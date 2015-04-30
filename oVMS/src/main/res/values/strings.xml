@@ -378,6 +378,7 @@
 
     <!-- RemoteJoystick Google Play Release -->
 
+    <string name="Joystick">Joystick</string>
     <string name="title_section1">Joystick</string>
     <string name="title_section2">Settings</string>
     <string name="title_section3">About</string>
