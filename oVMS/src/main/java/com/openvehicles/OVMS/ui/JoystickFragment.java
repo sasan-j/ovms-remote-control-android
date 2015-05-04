@@ -52,6 +52,7 @@ public class JoystickFragment extends BaseFragment
     int brakeCommand;
     int remoteOn;
     int autoBrake;
+    int brakeMode;
     int speedLimit;
     int speedLimitEnabled;
     int timeout;
@@ -209,6 +210,7 @@ public class JoystickFragment extends BaseFragment
         brakeCommand = 0;
         sequenceNumber = 0;
         autoBrake = 0;
+        brakeMode = 0;
         remoteOn = 0;
         speedLimit = 0;
         speedLimitEnabled = 0;
@@ -230,9 +232,8 @@ public class JoystickFragment extends BaseFragment
          * Forward Throttle
          * Backward Throttle
          * Break Enable
-         * Emergency break enable
          * Sequence Number
-         * AutoBrake
+         * Brake Mode
          * Remote Agent Enable
          * SpeedLimit
          * SpeedLimit Enable
@@ -242,10 +243,9 @@ public class JoystickFragment extends BaseFragment
         msg = String.format("101,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",
                 newStickValue > 0 ? newStickValue : 0,
                 newStickValue < 0 ? Math.abs(newStickValue) : 0,
-                (brakeCommand == 1 ? 1 : 0),
-                (brakeCommand == 2 ? 1 : 0),
+                (brakeCommand == ENABLED ? ENABLED : DISABLE),
                 sequenceNumber,
-                autoBrake,
+                brakeMode,/*brake mode*/
                 remoteOn,
                 speedLimit,
                 speedLimitEnabled,
