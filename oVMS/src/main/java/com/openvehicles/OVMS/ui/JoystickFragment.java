@@ -28,7 +28,6 @@ import android.widget.ToggleButton;
 import com.openvehicles.OVMS.R;
 import com.openvehicles.OVMS.api.OnResultCommandListener;
 import com.openvehicles.OVMS.entities.CarData;
-import com.openvehicles.OVMS.entities.PingData;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,15 +62,18 @@ public class JoystickFragment extends BaseFragment
 
     private SimpleAdapter listAdapter;
 
-    private int CONTROL_COMMAND = 101;
-    private int ENABLED = 1;
-    private int DISABLE = 0;
-    private int NO_SCENARIO = 0;
-    private int SPOOKY = 1;
+    private final int CONTROL_COMMAND = 101;
+    private final int ENABLED = 1;
+    private final int DISABLE = 0;
+    private final int NO_SCENARIO = 0;
+    private final int SPOOKY_SCENARIO = 1;
 
     //This means if current value differs THROTTLE_FILTER_PERCENTAGE % to previous value
     //the new value will be sent to the car
     private int THROTTLE_FILTER_PERCENTAGE = 10;
+
+
+    private ImageButton button_stop;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -101,7 +103,7 @@ public class JoystickFragment extends BaseFragment
         // Assign listener to widgets
 
         ToggleButton button_on_off = (ToggleButton) joystickView.findViewById(R.id.toggleButton);
-        ImageButton button_stop = (ImageButton) joystickView.findViewById(R.id.imageButtonStop);
+        button_stop = (ImageButton) joystickView.findViewById(R.id.imageButtonStop);
         CheckBox checkbox_autobrake = (CheckBox) joystickView.findViewById(R.id.checkBoxAutoBrake);
         CheckBox checkbox_speedlimit = (CheckBox) joystickView.findViewById(R.id.checkBoxSpeedLimit);
         NumberPicker numberPicker_speedlimit = (NumberPicker) joystickView.findViewById(R.id.numberPicker);
@@ -240,6 +242,12 @@ public class JoystickFragment extends BaseFragment
          * Timeout
          * Scenario
          */
+
+        // Always set throttle to zero if brake is on
+        if(brakeCommand == ENABLED){
+            newStickValue = 0;
+        }
+
         msg = String.format("101,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",
                 newStickValue > 0 ? newStickValue : 0,
                 newStickValue < 0 ? Math.abs(newStickValue) : 0,
@@ -453,13 +461,13 @@ public class JoystickFragment extends BaseFragment
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                     // TODO: Do the thing
                     switch (i) {
-                        case 0: // Joystick
+                        case NO_SCENARIO: // Joystick
                             disc.setEnabled(true);
                             scenario = NO_SCENARIO;
                             break;
-                        case 1: // Spooky
+                        case SPOOKY_SCENARIO: // Spooky
                             disc.setEnabled(false);
-                            scenario = SPOOKY;
+                            scenario = SPOOKY_SCENARIO;
                             break;
                     }
                 }
@@ -480,18 +488,23 @@ public class JoystickFragment extends BaseFragment
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.imageButtonStop:
-                if (scenario != 0) {
-                    scenario = 0;
-                    brakeCommand = 1;
+                if (scenario != NO_SCENARIO) {
+                    scenario = NO_SCENARIO;
+                    brakeCommand = ENABLED;
                     ((Spinner) joystickView.findViewById(R.id.spinner)).setSelection(0);
                     sendControlMessage(); // enable brakes
                 }
                 else {
-                    if (brakeToggle) {
-                        brakeCommand = 2;
+                    //TODO: change the image
+                    if (brakeCommand == ENABLED) {
+                        brakeCommand = DISABLE;
+
+                        button_stop.setImageDrawable(getResources().getDrawable(R.drawable.ic_stop));
                         sendControlMessage(); // disable brakes
                     } else {
-                        brakeCommand = 1;
+                        brakeCommand = ENABLED;
+
+                        button_stop.setImageDrawable(getResources().getDrawable(R.drawable.ic_stop_gray));
                         sendControlMessage(); // enable brakes
                     }
                 }
@@ -505,10 +518,10 @@ public class JoystickFragment extends BaseFragment
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (isChecked) {
-                        remoteOn = 1;
+                        remoteOn = ENABLED;
                         // The toggle is enabled
                     } else {
-                        remoteOn = 0;
+                        remoteOn = DISABLE;
                         // The toggle is disabled
                     }
 
