@@ -86,10 +86,10 @@ public class JoystickFragment extends BaseFragment
         sequenceNumber = 0;
         brakeCommand = 0;
         remoteOn = 0;
-        autoBrake = 1;
+        //autoBrake = 1;
         speedLimit = 10;
         speedLimitEnabled = 0;
-        timeout = 50;
+        timeout = 100;
         last_updated = -30000;
 
         scenario = NO_SCENARIO;
@@ -193,7 +193,7 @@ public class JoystickFragment extends BaseFragment
     private void setStickValue(int value) {
 
 
-        Log.d("throttle", String.valueOf(value));
+        //Log.d("throttle", String.valueOf(value));
         newStickValue = value;
 
         if (Math.abs(newStickValue - sentStickValue) > THROTTLE_FILTER_PERCENTAGE
@@ -248,7 +248,7 @@ public class JoystickFragment extends BaseFragment
             newStickValue = 0;
         }
 
-        msg = String.format("101,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",
+        msg = String.format("101,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",
                 newStickValue > 0 ? newStickValue : 0,
                 newStickValue < 0 ? Math.abs(newStickValue) : 0,
                 (brakeCommand == ENABLED ? ENABLED : DISABLE),
@@ -370,6 +370,7 @@ public class JoystickFragment extends BaseFragment
 
         getActivity().setRequestedOrientation(
                 ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+
     }
 
     @Override
