@@ -1,5 +1,6 @@
 package com.openvehicles.OVMS.ui;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -83,6 +84,9 @@ public class LatencyFragment extends BaseFragment implements OnClickListener, On
 		
 		findViewById(R.id.btn_measure_latency_car).setOnClickListener(this);
 		findViewById(R.id.btn_measure_latency_server).setOnClickListener(this);
+
+        getActivity().setRequestedOrientation(
+                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 	}
 
 	
@@ -199,4 +203,30 @@ public class LatencyFragment extends BaseFragment implements OnClickListener, On
 		cancelCommand();
 	}
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Log.d(TAG, "Latency onResume");
+
+        getActivity().setRequestedOrientation(
+                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        Log.d(TAG, "Latency onPause");
+        cancelCommand();
+
+        getActivity().setRequestedOrientation(
+                ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+    }
+
+    @Override
+    public void onDestroyView() {
+        cancelCommand();
+        super.onDestroyView();
+    }
 }

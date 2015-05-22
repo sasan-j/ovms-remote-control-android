@@ -8,44 +8,113 @@
     android:baselineAligned="false"
     >
 
-
     <FrameLayout
         android:layout_width="0dp"
         android:layout_height="fill_parent"
-        android:layout_weight="1">
+        android:layout_weight="0.7"
+        android:layout_gravity="center">
 
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="fill_parent"
-            android:id="@+id/imageView2"
-            android:src="@drawable/throttle_bar"
-            android:layout_gravity="center"
-            android:scaleType="fitXY" />
 
-        <ImageView
+
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/imageView"
-            android:src="@drawable/circle"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center"
+            >
 
+            <Button
+                android:id="@+id/btn_forward"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_centerHorizontal="true"
+                android:text="forward"
+                />
+
+            <Button
+                android:id="@+id/btn_reverse"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_below="@+id/btn_forward"
+                android:layout_marginTop="20dp"
+                android:layout_centerHorizontal="true"
+                android:text="reverse"
+                />
+
+        </RelativeLayout>
     </FrameLayout>
+
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="0dp"
         android:layout_height="fill_parent"
-        android:layout_weight="2"
+        android:layout_weight="2.5"
         android:layout_gravity="center_horizontal|bottom"
         android:baselineAligned="false"
         android:id="@+id/LinearLayout_central">
+
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:layout_gravity="center">
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:layout_gravity="center">
+
+                <NumberPicker
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/picker_speed"
+                    android:layout_gravity="center_horizontal"/>
+
+                <NumberPicker
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/picker_duration"
+                    android:layout_gravity="center_horizontal"/>
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:layout_gravity="center"
+            >
+
+            <Button
+                android:id="@+id/btn_speed_limit"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_centerHorizontal="true"
+                android:text="spd limit"
+                />
+
+            <Button
+                android:id="@+id/btn_spooky"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_below="@+id/btn_speed_limit"
+                android:layout_marginTop="20dp"
+                android:layout_centerHorizontal="true"
+                android:text="spooky"
+                />
+
+        </RelativeLayout>
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_gravity="center_horizontal|bottom"
-            android:layout_weight="1">
+            android:layout_weight="0.5">
 
             <ListView
                 android:layout_width="match_parent"
@@ -63,63 +132,87 @@
                 android:layout_weight="1" />
         </LinearLayout>
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:layout_weight="1">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            >
 
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Auto-brake"
-                android:id="@+id/checkBoxAutoBrake"
-                android:checked="true" />
+            <Button
+                android:id="@+id/btn_reset"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_centerHorizontal="true"
+                android:text="reset"
+                />
 
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Speed limit"
-                android:id="@+id/checkBoxSpeedLimit" />
+            <Button
+                android:id="@+id/btn_no_throttle"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_below="@+id/btn_reset"
+                android:layout_marginTop="20dp"
+                android:layout_centerHorizontal="true"
+                android:text="no throttle"
+                />
 
-            <NumberPicker
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/numberPicker"
-                android:layout_gravity="center_horizontal"/>
+        </RelativeLayout>
 
-        </LinearLayout>
+
     </LinearLayout>
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="fill_parent"
         android:layout_weight="1">
 
+        <ImageView
+            android:id="@+id/image_connection"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentRight="true"
+            android:padding="10dp"
+            android:src="@drawable/connection_unknown"
+            />
+
+        <ToggleButton
+            android:id="@+id/toggleButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_toLeftOf="@+id/image_connection"
+            android:text="New ToggleButton"
+            android:layout_gravity="center_horizontal|top" />
+
         <ImageButton
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:id="@+id/imageButtonStop"
+            android:id="@+id/btnStop"
             android:layout_gravity="center"
+            android:layout_centerHorizontal="true"
+            android:paddingTop="10dp"
+            android:layout_below="@+id/toggleButton"
             android:clickable="true"
             android:src="@drawable/ic_stop"
             android:background="#00ffffff"
             android:scaleType="fitCenter" />
 
-        <ToggleButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="New ToggleButton"
-            android:id="@+id/toggleButton"
-            android:layout_gravity="center_horizontal|top" />
+        <ImageView
+            android:id="@+id/img_signal_rssi"
+            android:layout_width="40dp"
+            android:layout_height="44dp"
+            android:layout_alignLeft="@id/txt_type"
+            android:layout_below="@+id/txt_type"
+            android:src="@drawable/signal_strength_0" />
 
         <ImageView
-            android:id="@+id/image_connection"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:src="@drawable/connection_unknown"
-            android:layout_gravity="right|top" />
+            android:id="@+id/image_brake"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_alignParentBottom="true"
+            android:padding="10dp"
+            />
 
-    </FrameLayout>
+    </RelativeLayout>
 
 </LinearLayout>

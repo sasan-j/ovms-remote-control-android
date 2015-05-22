@@ -5,7 +5,7 @@ android {
     buildToolsVersion "22.0.1"
 
     defaultConfig {
-        applicationId "io.zebel.OVMS"
+        applicationId "lu.snt.OVMS"
         minSdkVersion 11
         targetSdkVersion 22
     }
