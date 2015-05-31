@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation" >
-    <string name="app_name">OVMS-S</string>
+    <string name="app_name">RemoteJoystick</string>
     <string name="Loading">Please wait</string>
     <string name="Settings">Settings</string>
     <string name="Range" formatted="false">Range: %s (%s estimated)</string>

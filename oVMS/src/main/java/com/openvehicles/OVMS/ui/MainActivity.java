@@ -86,7 +86,7 @@ public class MainActivity extends ApiActivity implements
 
 		mPagerAdapter = new MainPagerAdapter(
 				//new TabInfo(R.string.Battery, R.drawable.ic_action_battery, InfoFragment.class),
-                new TabInfo(R.string.Car, R.drawable.ic_action_car, CarFragment.class),
+                //new TabInfo(R.string.Car, R.drawable.ic_action_car, CarFragment.class),
 				//new TabInfo(R.string.Latency, R.drawable.ic_action_latency, LatencyFragment.class),
 				new TabInfo(R.string.Joystick, R.drawable.ic_action_latency, JoystickFragment.class),
 				//new TabInfo(R.string.Messages, R.drawable.ic_action_email, NotificationsFragment.class),

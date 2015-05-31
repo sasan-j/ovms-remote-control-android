@@ -21,6 +21,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.openvehicles.OVMS.BaseApp;
 import com.openvehicles.OVMS.R;
@@ -161,6 +162,9 @@ public class ApiTask extends AsyncTask<Void, Object, Void> {
 		Log.i(TAG, "TX: " + command);
 		if (!isLoggedIn) {
 			Log.w(TAG, "Server not ready. TX aborted.");
+			if(mListener != null){
+				mListener.onResultCommand("server");
+			}
 			return false;
 		}
 

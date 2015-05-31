@@ -76,7 +76,7 @@ public class ApiService extends Service implements OnUpdateStatusListener {
 
 		mOnResultCommandListener = pOnResultCommandListener;
 		mApiTask.sendCommand(String.format("MP-0 C%s", pCommand));
-		Toast.makeText(this, pMessage, Toast.LENGTH_SHORT).show();
+		//Toast.makeText(this, pMessage, Toast.LENGTH_SHORT).show();
 	}
 	
 	public boolean sendCommand(String pCommand, OnResultCommandListener pOnResultCommandListener) {
@@ -134,7 +134,10 @@ public class ApiService extends Service implements OnUpdateStatusListener {
 	}
 	
 	public boolean isLoggedIn() {
-		return mApiTask.isLoggedIn();
+		if(mApiTask != null)
+			return mApiTask.isLoggedIn();
+		else
+			return false;
 	}
 	
 	public CarData getCarData() {

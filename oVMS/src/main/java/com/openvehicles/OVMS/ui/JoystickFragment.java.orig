@@ -1,23 +1,32 @@
 package com.openvehicles.OVMS.ui;
 
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
+import android.media.Image;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.SimpleAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.openvehicles.OVMS.R;
 import com.openvehicles.OVMS.api.OnResultCommandListener;
@@ -25,16 +34,11 @@ import com.openvehicles.OVMS.entities.CarData;
 
 import com.openvehicles.OVMS.ui.utils.Ui;
 import com.openvehicles.OVMS.utils.CarsStorage;
-
-import org.w3c.dom.Text;
+import com.openvehicles.OVMS.utils.OVMSNotifications;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by julien on 06/02/15.
@@ -89,56 +93,28 @@ public class JoystickFragment extends BaseFragment
 
     private final int DEFAULT_THROTTLE = 15;
 
-    private final int NETWORK_TIMEOUT = 15;
-
-    Date lastUpdatedLocalTime = null;
-
-
-    private int mInterval = 3000; // 5 seconds by default, can be changed later
-
-    private Handler mUiHandler;
-    private Handler mMsgHandler;
-
     private ImageButton button_stop;
 
-    private ImageButton btnGoForward;
-    private ImageButton btnGoReverse;
+    private Button btnGoForward;
+    private Button btnGoReverse;
 
-    private Button btnLimitSpeedEnable;
-    private Button btnLimitSpeedDisable;
+    private Button btnLimitSpeed;
+    private Button btnSpookyMode;
 
-    private Button btnSpookyModeOn;
-    private Button btnSpookyModeOff;
-
-    private ImageButton btnResetCar;
-
-    private Button btnThrottleEnable;
-    private Button btnThrottleDisable;
+    private Button btnResetCar;
+    private Button btnNoThrottle;
 
     private NumberPicker pickerSpeedLimit;
     private NumberPicker pickerDuration;
 
-    private ImageView imgConnection;
-
-    private TextView tv;
-    private TextView last_cmd;
-
 
     private CarData mCarData;
 
-    private String TAG = "JOYSTICK";
-    private long counter = 0;
 
-    private String commandString = "";
-    private String commandName = "";
-    int pendingCommand = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
 
         // init car data:
         mCarData = CarsStorage.get().getSelectedCarData();
@@ -150,13 +126,15 @@ public class JoystickFragment extends BaseFragment
         noThrottleEnabled = DISABLE;
 
         remoteOn = 0;
+<<<<<<< HEAD
         autoBrake = 1;
+=======
+        //autoBrake = 1;
+        speedLimit = 10;
+        speedLimitEnabled = 0;
+>>>>>>> ea0d5182ac7aef943a86f16450d726e543af671c
         timeout = 100;
         last_updated = -30000;
-
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT+1:00"));
-        lastUpdatedLocalTime = cal.getTime();
-
 
         //scenario = NO_SCENARIO;
 
@@ -168,40 +146,29 @@ public class JoystickFragment extends BaseFragment
 
         // Assign listener to widgets
 
+        ToggleButton button_on_off = (ToggleButton) joystickView.findViewById(R.id.toggleButton);
+        button_stop = (ImageButton) joystickView.findViewById(R.id.btnStop);
+
 
 
         //Get reference to buttons
-        btnGoForward = (ImageButton)joystickView.findViewById(R.id.btn_forward);
-        btnGoReverse = (ImageButton)joystickView.findViewById(R.id.btn_reverse);
+        btnGoForward = (Button)joystickView.findViewById(R.id.btn_forward);
+        btnGoReverse = (Button)joystickView.findViewById(R.id.btn_reverse);
 
-        btnLimitSpeedDisable = (Button)joystickView.findViewById(R.id.btn_speed_limit_disable);
-        btnLimitSpeedEnable = (Button)joystickView.findViewById(R.id.btn_speed_limit_enable);
+        btnLimitSpeed = (Button)joystickView.findViewById(R.id.btn_speed_limit);
+        btnSpookyMode = (Button) joystickView.findViewById(R.id.btn_spooky);
 
-        btnSpookyModeOff = (Button) joystickView.findViewById(R.id.btn_spooky_off);
-        btnSpookyModeOn = (Button) joystickView.findViewById(R.id.btn_spooky_on);
-
-        btnResetCar = (ImageButton) joystickView.findViewById(R.id.btn_reset);
-
-        btnThrottleDisable = (Button) joystickView.findViewById(R.id.btn_throttle_disable);
-        btnThrottleEnable = (Button) joystickView.findViewById(R.id.btn_throttle_enable);
-
-
-        imgConnection = (ImageView)joystickView.findViewById(R.id.image_connection);
-        tv = (TextView)joystickView.findViewById(R.id.txt_last_updated);
-
-        last_cmd = (TextView)joystickView.findViewById(R.id.txt_last_cmd);
+        btnResetCar = (Button) joystickView.findViewById(R.id.btn_reset);
+        btnNoThrottle = (Button) joystickView.findViewById(R.id.btn_no_throttle);
 
 
         //Set onclick listeners for buttons
         btnGoForward.setOnClickListener(this);
         btnGoReverse.setOnClickListener(this);
-        btnLimitSpeedDisable.setOnClickListener(this);
-        btnLimitSpeedEnable.setOnClickListener(this);
-        btnSpookyModeOff.setOnClickListener(this);
-        btnSpookyModeOn.setOnClickListener(this);
+        btnLimitSpeed.setOnClickListener(this);
+        btnSpookyMode.setOnClickListener(this);
         btnResetCar.setOnClickListener(this);
-        btnThrottleDisable.setOnClickListener(this);
-        btnThrottleEnable.setOnClickListener(this);
+        btnNoThrottle.setOnClickListener(this);
 
 
         //button_on_off.setOnCheckedChangeListener(onOffToggleListener);
@@ -223,7 +190,7 @@ public class JoystickFragment extends BaseFragment
 
         pickerDuration.setMaxValue(50);
         pickerDuration.setMinValue(1);
-        pickerDuration.setValue(10);
+        pickerDuration.setValue(1);
         pickerDuration.setWrapSelectorWheel(false);
 
         //Set states
@@ -280,72 +247,9 @@ public class JoystickFragment extends BaseFragment
         ((ListView)joystickView.findViewById(R.id.listView)).setAdapter(listAdapter);
 
 
-
-
-
-        mMsgHandler = new Handler();
-
-        startRepeatingTask();
         // Inflate the layout for this fragment
         return joystickView;
     }
-
-
-
-
-
-
-    Runnable mStatusChecker = new Runnable() {
-        @Override
-        public void run() {
-            counter++;
-
-
-            Log.d(TAG, "ticking 1s");
-            Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT+1:00"));
-            Date currentLocalTime = cal.getTime();
-            long diffInMs = currentLocalTime.getTime() - lastUpdatedLocalTime.getTime();
-            long diffInSec = TimeUnit.MILLISECONDS.toSeconds(diffInMs);
-            tv.setText(String.format("+%d",diffInSec));
-            if(diffInSec > NETWORK_TIMEOUT)
-            {
-                applyTimeoutView();
-            }
-            last_cmd.setVisibility(View.INVISIBLE);
-
-            if((counter % 2 == 0) && (pendingCommand == 1)){
-                sendCommand(commandName, commandString);
-                last_cmd.setText(commandName);
-                last_cmd.setVisibility(View.VISIBLE);
-            } else if(counter % 5 == 0){
-                setStatsOutdated();
-                //updateStatus(); //this function can change value of mInterval.
-                long now;
-                Log.d(TAG, "ticking 3s");
-                now = System.currentTimeMillis();
-                long delay = now - last_updated;
-                if((delay > 4000)  && (spookyEnabled == DISABLE) ){
-                    askForStatusUpdate();
-                    //Log.d(TAG, "ask for update in loop");
-                }
-            }
-
-
-
-            mMsgHandler.postDelayed(mStatusChecker, 1000);
-        }
-    };
-
-
-
-    void startRepeatingTask() {
-        mStatusChecker.run();
-    }
-
-    void stopRepeatingTask() {
-        mMsgHandler.removeCallbacks(mStatusChecker);
-    }
-
 
     /**
      * Called when car data is updated
@@ -374,7 +278,15 @@ public class JoystickFragment extends BaseFragment
                 SUB_CMD_NO_THROTTLE,
                 noThrottle);
 
-        queueControlMessage("No throttle", msg);
+/*
+        String msg = String.format("%d,%d,%d,%d,%d",
+                CMD_CONTROL,
+                SUB_CMD_GET_STATE,
+                3,
+                4,
+                5);
+*/
+        sendControlMessage(msg);
     }
 
     /**
@@ -382,16 +294,22 @@ public class JoystickFragment extends BaseFragment
      */
     protected void stopRemoteAgent(){
 
+<<<<<<< HEAD
+=======
+        //Log.d("throttle", String.valueOf(value));
+        newStickValue = value;
+>>>>>>> ea0d5182ac7aef943a86f16450d726e543af671c
 
         String msg = String.format("%d,%d",
                 CMD_CONTROL,
                 SUB_CMD_RESET);
 
-        queueControlMessage("Reset", msg);
+        sendControlMessage(msg);
     }
 
     /**
-      * @param enabled enable or disable
+     * This method enable or disables spooky mode
+     * @param enabled enable or disable
      * @param interval_duration spooky interval in each direction in seconds
      *
      */
@@ -405,8 +323,7 @@ public class JoystickFragment extends BaseFragment
                 enabled,
                 intervalCorrected);
 
-        queueControlMessage("Spooky", msg);
-
+        sendControlMessage(msg);
     }
 
     /**
@@ -424,7 +341,7 @@ public class JoystickFragment extends BaseFragment
                 DEFAULT_THROTTLE,
                 correctTimeInterval(intervalDuration));
 
-        queueControlMessage("Forward", msg);
+        sendControlMessage(msg);
     }
 
 
@@ -443,7 +360,7 @@ public class JoystickFragment extends BaseFragment
                 DEFAULT_THROTTLE,
                 correctTimeInterval(intervalDuration));
 
-        queueControlMessage("Reverse", msg);
+        sendControlMessage(msg);
     }
 
     /**
@@ -461,7 +378,7 @@ public class JoystickFragment extends BaseFragment
                 validateSpeed(speedLimit));
 
 
-        queueControlMessage("Speed limit", msg);
+        sendControlMessage(msg);
     }
 
 
@@ -470,22 +387,35 @@ public class JoystickFragment extends BaseFragment
      */
     protected void askForStatusUpdate(){
 
+<<<<<<< HEAD
         String msg = String.format("%d,%d",
                 CMD_CONTROL,
                 SUB_CMD_GET_STATE);
+=======
+        msg = String.format("101,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",
+                newStickValue > 0 ? newStickValue : 0,
+                newStickValue < 0 ? Math.abs(newStickValue) : 0,
+                (brakeCommand == ENABLED ? ENABLED : DISABLE),
+                sequenceNumber,
+                brakeMode,/*brake mode*/
+                remoteOn,
+                speedLimit,
+                speedLimitEnabled,
+                timeout,
+                scenario);
+>>>>>>> ea0d5182ac7aef943a86f16450d726e543af671c
 
-        queueControlMessage("Get stats", msg);
+        sendControlMessage(msg);
     }
 
     /**
      * Formats and sends a message containing throttle and brake commands with a sequence number
      * The brakeCommand indicator values are 1: set brakes, 2: disable brakes, 0: no action
      */
-    protected void queueControlMessage(String name, String str) {
+    protected void sendControlMessage(String msg) {
 
-        commandName = name;
-        commandString = str;
-        pendingCommand = 1;
+        sendCommand("Control", msg, this);
+
         /*
         sentStickValue = newStickValue;
 
@@ -501,12 +431,6 @@ public class JoystickFragment extends BaseFragment
         }
         */
 
-    }
-
-
-    protected void sendCommand(String commandName, String commandString){
-        sendCommand(commandName, commandString, this);
-        pendingCommand = 0;
     }
 
     /**
@@ -549,29 +473,7 @@ public class JoystickFragment extends BaseFragment
         ControlOk"
          */
 
-        Log.d(TAG, "got something");
-
-        long now = System.currentTimeMillis();
-        long delay = last_updated - now;
-        last_updated = now;
-        TextView tv = (TextView)findViewById(R.id.txt_last_updated);
-
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT+1:00"));
-        lastUpdatedLocalTime = cal.getTime();
-
-        tv.setText("+0");
-
-
-        if(delay < 5000){
-            imgConnection.setImageDrawable(getResources().getDrawable(R.drawable.connection_good));
-        } else if(delay < 20000) {
-            imgConnection.setImageDrawable(getResources().getDrawable(R.drawable.connection_bad));
-        } else {
-            imgConnection.setImageDrawable(getResources().getDrawable(R.drawable.connection_unknown));
-        }
-
-
-
+        last_updated = System.currentTimeMillis();
 
         if (result.length <= 1)
             return;
@@ -582,6 +484,13 @@ public class JoystickFragment extends BaseFragment
         String cmdMessage = getSentCommandMessage(result[0]);
 
         if (command == CONTROL_COMMAND && result.length > 3 ) {
+            if (result[1].equals("0")) { // car is not braking
+                ((ImageView)joystickView.findViewById(R.id.image_brake)).setImageResource(R.drawable.brake_gray);
+                //brakeToggle = false;
+                //brakeCommand = ;
+            } else {
+                ((ImageView)joystickView.findViewById(R.id.image_brake)).setImageResource(R.drawable.brake);
+            }
             /*
             else if (result[1].equals("2")) { // car is emergency braking
                 ((ImageButton)joystickView.findViewById(R.id.imageButtonStop)).setImageResource(R.drawable.ic_restart);
@@ -597,7 +506,6 @@ public class JoystickFragment extends BaseFragment
             listAdapter.notifyDataSetChanged(); // notify the value change to the list
 
             //Config on
-            /*
             if (result[5].equals("1")){
                 ((ToggleButton)joystickView.findViewById(R.id.toggleButton))
                         .setTextColor(Color.GREEN);
@@ -606,7 +514,7 @@ public class JoystickFragment extends BaseFragment
                 ((ToggleButton)joystickView.findViewById(R.id.toggleButton))
                         .setTextColor(Color.RED);
             }
-*/
+
 
             // TODO : use result
         }
@@ -642,7 +550,7 @@ public class JoystickFragment extends BaseFragment
     /*
     private final Runnable controlMessageRunnable = new Runnable() {
         public void run() {
-            queueControlMessage();
+            sendControlMessage();
             controlMessageHandler.postDelayed(this,2000); // periodicity in ms
         }
     };
@@ -652,15 +560,16 @@ public class JoystickFragment extends BaseFragment
     public void onPause() {
         super.onPause();
         stopRemoteAgent();
-
-        stopRepeatingTask();
         // TODO: STAHP EVERYTHING
         // Another activity is taking focus (this activity is about to be "paused").
 
         getActivity().setRequestedOrientation(
                 ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 
+<<<<<<< HEAD
         cancelCommand();
+=======
+>>>>>>> ea0d5182ac7aef943a86f16450d726e543af671c
     }
 
     @Override
@@ -784,41 +693,68 @@ public class JoystickFragment extends BaseFragment
         speedLimit = pickerSpeedLimit.getValue();
 
         switch (v.getId()) {
+            /*
+            case R.id.imageButtonStop:
+                if (scenario != NO_SCENARIO) {
+                    scenario = NO_SCENARIO;
+                    brakeCommand = ENABLED;
+                    ((Spinner) joystickView.findViewById(R.id.spinner)).setSelection(0);
+                    //sendControlMessage(); // enable brakes
+                }
+                else {
+                    //TODO: change the image
+                    if (brakeCommand == ENABLED) {
+                        brakeCommand = DISABLE;
+
+                        button_stop.setImageDrawable(getResources().getDrawable(R.drawable.ic_stop));
+                        //sendControlMessage(); // disable brakes
+                    } else {
+                        brakeCommand = ENABLED;
+
+                        button_stop.setImageDrawable(getResources().getDrawable(R.drawable.ic_stop_gray));
+                        //sendControlMessage(); // enable brakes
+                    }
+                }
+                break;
+*/
             case R.id.btn_forward:
                 goForward(pickerSpeedLimit.getValue(), actionDuration);
                 break;
             case R.id.btn_reverse:
                 goReverse(pickerSpeedLimit.getValue(), actionDuration);
                 break;
-            case R.id.btn_speed_limit_disable:
-                setSpeedLimit(DISABLE, 0);
-                speedLimitEnabled = DISABLE;
+            case R.id.btn_speed_limit:
+                if(speedLimitEnabled == ENABLED) {
+                    setSpeedLimit(DISABLE, 0);
+                    speedLimitEnabled = DISABLE;
+                }
+                else{
+                    setSpeedLimit(ENABLED, speedLimit);
+                    speedLimitEnabled = ENABLED;
+                }
                 break;
-            case R.id.btn_speed_limit_enable:
-                setSpeedLimit(ENABLED, speedLimit);
-                speedLimitEnabled = ENABLED;
-                break;
-            case R.id.btn_spooky_off:
-                setSpookyMode(DISABLE, actionDuration);
-                spookyEnabled = DISABLE;
-                break;
-            case R.id.btn_spooky_on:
-                setSpookyMode(ENABLED, actionDuration);
-                spookyEnabled = ENABLED;
+            case R.id.btn_spooky:
+                if(spookyEnabled == DISABLE){
+                    setSpookyMode(ENABLED, actionDuration);
+                    spookyEnabled = ENABLED;
+                } else {
+                    setSpookyMode(DISABLE, actionDuration);
+                    spookyEnabled = DISABLE;
+                }
                 break;
             case R.id.btn_reset:
                 stopRemoteAgent();
                 spookyEnabled = DISABLE;
                 speedLimitEnabled = DISABLE;
+
                 break;
-            case R.id.btn_throttle_disable:
-                setNoThrottle(ENABLED);
-                noThrottleEnabled = ENABLED;
+            case R.id.btn_no_throttle:
+                if(noThrottleEnabled==DISABLE) {
+                    setNoThrottle(ENABLED);
+                    noThrottleEnabled = ENABLED;
+                }
                 break;
-            case R.id.btn_throttle_enable:
-                setNoThrottle(DISABLE);
-                noThrottleEnabled = DISABLE;
-                break;
+
         }
     }
 
@@ -836,7 +772,7 @@ public class JoystickFragment extends BaseFragment
                         remoteOn = DISABLE;
                         // The toggle is disabled
                     }
-                    //queueControlMessage();
+                    //sendControlMessage();
                 }
             };
 
@@ -855,21 +791,4 @@ public class JoystickFragment extends BaseFragment
         iv.setImageResource(Ui.getDrawableIdentifier(getActivity(),
                 "signal_strength_" + pCarData.car_gsm_bars));
     }
-
-
-    private void applyTimeoutView(){
-        imgConnection.setImageDrawable(getResources().getDrawable(R.drawable.connection_unknown));
-        // The signal strength indicator
-        ImageView iv = (ImageView) findViewById(R.id.img_signal_rssi);
-        iv.setImageResource(Ui.getDrawableIdentifier(getActivity(),
-                "signal_strength_" + 0));
-    }
-
-    private void setStatsOutdated(){
-        setListViewValue(0,"-" + " km/h");
-        setListViewValue(1,"-" + " rpm");
-        setListViewValue(2,"-" + " %");
-        listAdapter.notifyDataSetChanged(); // notify the value change to the list
-    }
-
 }

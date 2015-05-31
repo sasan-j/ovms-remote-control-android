@@ -294,6 +294,9 @@ public class CarFragment extends BaseFragment implements OnClickListener, OnResu
 			tv.setTextColor(0xFFFFFFFF);
 		}
 
+		tv.setText(String.valueOf(seconds));
+
+
 		// Then the parking timer...
 //		LinearLayout parkinglayoutv = (LinearLayout)findViewById(R.id.tabCarLayoutParking);
 		tv = (TextView)findViewById(R.id.txt_parked_time);

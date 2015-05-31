@@ -1,6 +1,8 @@
 package com.openvehicles.OVMS;
 
 import android.app.Application;
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 
 public class BaseApp extends Application {
 //	private static final String TAG = "BaseApp";
@@ -9,6 +11,7 @@ public class BaseApp extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		Fabric.with(this, new Crashlytics());
 		sInstance = this;
 	}
 	
