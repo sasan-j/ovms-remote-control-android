@@ -28,6 +28,8 @@ import com.openvehicles.OVMS.utils.CarsStorage;
 
 import org.w3c.dom.Text;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -215,15 +217,36 @@ public class JoystickFragment extends BaseFragment
         pickerDuration.setOnValueChangedListener(numberPickerChangeListener);
         pickerSpeedLimit.setOnValueChangedListener(numberPickerChangeListener);
 
+
+
+
         // Populate the numberpicker
         pickerSpeedLimit.setMaxValue(80);
         pickerSpeedLimit.setMinValue(0);
         pickerSpeedLimit.setValue(HARD_SPEED_LIMIT);
         pickerSpeedLimit.setWrapSelectorWheel(false);
 
-        pickerDuration.setMaxValue(50);
-        pickerDuration.setMinValue(1);
-        pickerDuration.setValue(10);
+
+
+        Double minValue = 0.0;
+        Double maxValue = 5.0;
+        Double step = 0.1;
+
+        Double steps = (maxValue - minValue)/step;
+
+        String[] valueSet = new String[steps.intValue()];
+
+        NumberFormat formatter = new DecimalFormat("#0.0");
+
+        for (int i = 0; i < steps.intValue(); i++) {
+            valueSet[i] = formatter.format(i*step);
+        }
+
+        pickerDuration.setDisplayedValues(valueSet);
+
+        pickerDuration.setMaxValue(steps.intValue()-1);
+        pickerDuration.setMinValue(0);
+        pickerDuration.setValue(20);
         pickerDuration.setWrapSelectorWheel(false);
 
         //Set states
@@ -397,13 +420,12 @@ public class JoystickFragment extends BaseFragment
      */
     protected void setSpookyMode(int enabled, float interval_duration){
 
-        int intervalCorrected = (int)(interval_duration*1);
 
         String msg = String.format("%d,%d,%d,%d",
                 CMD_CONTROL,
                 SUB_CMD_SPOOKY,
                 enabled,
-                intervalCorrected);
+                correctTimeInterval(interval_duration));
 
         queueControlMessage("Spooky", msg);
 
@@ -515,7 +537,7 @@ public class JoystickFragment extends BaseFragment
      */
     protected int correctTimeInterval(float intervalSeconds) {
 
-        return (int)(intervalSeconds*1);
+        return (int)(intervalSeconds*10);
 
     }
 
